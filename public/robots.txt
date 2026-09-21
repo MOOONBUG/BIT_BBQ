@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mooon3.wooou-bill.workers.dev/sitemap-index.xml

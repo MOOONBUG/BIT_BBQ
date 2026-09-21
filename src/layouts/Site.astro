@@ -1,0 +1,7 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+const { title = 'MooonStoreClinic — Storefront reviews & improvements', description = 'Focused product-page reviews for independent stores. Evidence, priorities and practical improvements.' } = Astro.props;
+---
+<!doctype html><html lang="en"><head><BaseHead title={title} description={description}/></head><body><a href="#main" class="skip">Skip to content</a><Header/><main id="main"><slot/></main><Footer/></body></html>
