@@ -40,7 +40,7 @@ npm run check
 ```
 本地预览默认 http://localhost:4321 。check执行构建、tsc、Cloudflare打包预检，不上传线上。
 如在受限机器执行，设置ASTRO_TELEMETRY_DISABLED=1、WRANGLER_SEND_METRICS=false，并将WRANGLER_LOG_PATH设置到可写目录。
-现有适配器会提示当前全静态页面不需要SSR适配器；这是提示，不代表构建失败。本次保留现有部署结构，未盲目升级旧依赖。上线后另行安排依赖安全审查。
+网站使用Astro静态输出与Cloudflare原生静态资源托管，不再加载Astro服务器渲染Worker。wrangler.json不配置main，assets指定dist与404-page；新增后端功能前需要重新设计执行入口。旧适配器依赖暂保留在锁文件中但不启用，后续单独清理及安全审查。
 
 ## Cloudflare自动部署
 截图确认的配置：仓库BIT_BBQ、生产分支main、根目录 ./、构建命令留空、部署命令 npm run deploy。
@@ -65,3 +65,6 @@ badbenu.sbs此前公开DNS返回NXDOMAIN，尚未确认注册状态。先到原�
 - 初期无新增订阅；Cloudflare免费额度有上限，检查账户计划、用量和账单提醒，不假定永久免费。
 - 新增分析、表单或支付前更新隐私/条款并核实数据处理方式。现有外链通信受邮件/WhatsApp服务商规则约束。
 - 联系方式、报价、付款条款和实际交付能力定期复核。价格变化需同步首页和terms页面。
+
+## 1101修复记录
+2026-09-21用户浏览器确认原部署出现Worker异常1101。旧配置本地未复现，不能确认线上具体堆栈。所有页面均为静态，因此移除不必要的SSR适配器和Worker入口，改用原生静态资源托管。本地Cloudflare运行环境验证页面/资源/404共12项通过，并验证联系链接。最终线上验证与版本见部署状态记录。
