@@ -1,5 +1,10 @@
 {
   "name": "mooon3",
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "mooonstoreclinic.top", "custom_domain": true },
+    { "pattern": "www.mooonstoreclinic.top", "custom_domain": true }
+  ],
   "compatibility_date": "2024-11-01",
   "assets": {
     "directory": "./dist",
