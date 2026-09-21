@@ -1,1 +1,1 @@
-export const business = { name: 'MooonStoreClinic', email: '', whatsapp: '', price: 'USD 60' };
+export const business = { name: 'MooonStoreClinic', email: '', whatsapp: 'https://wa.me/message/MBMDLTOAH5HFF1', price: 'USD 60' };

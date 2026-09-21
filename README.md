@@ -26,6 +26,7 @@
 | 下载的咨询提纲 | public/review-brief.txt |
 
 ## 联系方式
+当前WhatsApp Business公开入口：https://wa.me/message/MBMDLTOAH5HFF1 ，商家显示名称Mooon Store Clinic。邮箱尚未配置。链接由用户提供，网站不自动发送消息。
 在 src/site.ts 的 email 填完整邮箱，whatsapp 填应用提供的完整分享链接，或核实的 https://wa.me/国际号码。不得把@用户名直接拼接成wa.me链接。手机号链接会公开该号码。
 两项为空时页面会提示未开放咨询，提纲下载不等于发送。设置地址后必须实际点击确认打开正确收件人；不在测试时向自己以外的人发消息。
 网站不会自动替你设置邮箱。域名邮箱需要独立邮箱服务和MX/SPF/DKIM/DMARC；Cloudflare Email Routing只做转发时不等于有商务发信能力。
