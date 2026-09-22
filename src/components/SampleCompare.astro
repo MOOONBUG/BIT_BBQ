@@ -1,0 +1,24 @@
+---
+import { useLocale } from '../i18n';
+const { t } = useLocale(Astro.url);
+---
+<section class="sample-compare" hidden aria-labelledby="compare-label">
+  <h2 id="compare-label">{t('compareDrag')}</h2>
+  <div class="compare-canvas" aria-hidden="true">
+    <div class="compare-layer"><span>{t('m019')}</span><div class="compare-product"><div class="soft-cup"><span>every<br/>day.</span></div><div><h3>{t('m023')}</h3><strong>$18</strong><p>{t('m024')}</p><div class="mock-button">{t('m025')}</div></div></div></div>
+    <div class="compare-layer improved"><span>{t('m020')}</span><div class="compare-product"><div class="soft-cup"><span>every<br/>day.</span></div><div><h3>{t('m100')}</h3><strong>{t('m122')}</strong><p>{t('m123')}<br/>{t('m124')}</p><div class="mock-button">{t('m125')}</div></div></div></div>
+    <div class="compare-divider"><span>↔</span></div>
+  </div>
+  <label class="compare-slider-label" for="sample-reveal">{t('m019')} <span aria-hidden="true">↔</span> {t('m020')}</label>
+  <input id="sample-reveal" type="range" min="0" max="100" value="50" aria-labelledby="compare-label"/>
+  <p class="micro">{t('m032')}</p>
+</section>
+<script>
+const comparison = document.querySelector<HTMLElement>('.sample-compare');
+if (comparison) {
+  comparison.hidden = false;
+  comparison.querySelector<HTMLInputElement>('input')!.addEventListener('input', e => {
+    comparison.style.setProperty('--reveal', `${(e.target as HTMLInputElement).value}%`);
+  });
+}
+</script>
