@@ -8,3 +8,55 @@ button{font:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:3p
 @media(max-width:1100px){.hero{gap:30px;grid-template-columns:1fr 1.1fr}.demo-stage{gap:14px;padding:16px}.hero h1{font-size:3rem}.hero h1 em{font-size:.82em}.demo-product h2{font-size:23px}.lab-label{display:none}}
 @media(max-width:760px){.hero{grid-template-columns:1fr;gap:32px;padding-block:36px 50px}.hero:before{inset:0}.hero h1{font-size:clamp(2rem,8.5vw,3.7rem)}.hero h1 em{font-size:.9em}.hero .lede{font-size:17px}.interactive-review{box-shadow:0 15px 35px #22483212,4px 4px 0 #dce8d5}.demo-stage{gap:14px;padding:16px}.product-visual{min-height:205px}.demo-product h2{font-size:22px}.demo-price{font-size:19px}.cup-object{width:80px;height:115px}.product-word{font-size:27px}.hotspots{padding-inline:16px}.finding-note{margin-inline:16px;min-height:124px}.deliverable-section{padding:30px 24px;margin-bottom:48px}.deliverable-controls{gap:6px}.deliverable-controls button{padding:10px 8px;font-size:12px}.deliverable-panel{grid-template-columns:1fr;gap:16px;min-height:320px}.deliverable-panel>span{font-size:66px;letter-spacing:-5px}.deliverable-panel h3{font-size:26px}.deliverable-panel p{font-size:16px}.review-topics article:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){.hero-copy,.interactive-review{animation:none}.cup-object,.review-topics article,.closing img,.button span,.deliverable-controls button{transition:none!important}.closing:hover img,.review-topics article:hover,.deliverable-controls button:hover{transform:none}}
+
+/* Compact language disclosure; layer 2 keeps it above the existing page content. */
+.header nav{margin-left:auto}
+.language-switcher{position:relative;flex:none;padding:0;border:0;z-index:2}
+.language-switcher summary{min-width:80px;min-height:44px;justify-content:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:4px;font-size:12px;line-height:1;white-space:nowrap}
+.language-switcher summary:hover,.language-switcher[open] summary{background:#e6eddf;border-color:#8aa68e}
+.language-switcher summary:after{content:'';width:5px;height:5px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg);margin:0 1px 3px 2px}
+.language-switcher[open] summary:after{content:'';transform:rotate(225deg);margin-top:4px}
+.language-symbol{display:inline-flex;align-items:baseline;font-family:Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:-3px;padding-right:3px}
+.language-symbol span{font-size:10px;transform:translateY(3px)}
+.language-options{position:absolute;right:0;top:calc(100% + 8px);width:184px;max-width:calc(100vw - 32px);margin:0;padding:6px;list-style:none;background:#fdfdf8;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 30px #102d321c}
+.language-options li{margin:0}
+.language-options a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;min-height:42px;border-radius:3px;text-decoration:none;font-size:14px;line-height:1.5}
+.language-options a:hover,.language-options a:focus-visible{background:#e6eddf;color:var(--ink)}
+.language-options a[aria-current=true]{background:#dcebd9;font-weight:700}
+.language-options a:focus-visible{outline-offset:-2px}
+.hero-copy,.demo-product,.section-heading,.price,.sample,.deliverable-panel>div{min-width:0}
+.demo-stage{grid-template-columns:minmax(0,.9fr) minmax(0,1fr)}
+.product-caption{max-width:100%;padding-inline:6px;text-align:center;line-height:1.3}
+html:not([lang=en]) .product-caption{font-size:9px}
+html:not([lang=en]) .demo-product h2{font-size:clamp(1.2rem,1.8vw,1.7rem);overflow-wrap:anywhere}
+html:not([lang=en]) .preview-heading>span:not(.lab-label){font-size:13px}
+html:not([lang=en]) .hero h1{font-size:clamp(2.3rem,3.7vw,3.8rem)}
+html:not([lang=en]) .hero h1 em{font-size:.88em}
+html[lang=ko] body{font-family:Atkinson,'Malgun Gothic','Apple SD Gothic Neo',sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+html[lang=ja] body{font-family:Atkinson,'Yu Gothic','Hiragino Kaku Gothic ProN',Meiryo,sans-serif}
+html[lang=zh-Hant] body{font-family:Atkinson,'Microsoft JhengHei','PingFang TC',sans-serif}
+:is(html[lang=ko],html[lang=ja],html[lang=zh-Hant]) :is(h1,h2,h3,h1 em,.closing em){letter-spacing:-.025em;line-height:1.35}
+:is(html[lang=ko],html[lang=ja],html[lang=zh-Hant]) :is(h1 em,.closing em){font-family:inherit;font-style:normal}
+@media(max-width:1000px){.header{gap:16px}.header nav{gap:16px;font-size:13px}.brand{font-size:19px}}
+@media(max-width:760px){
+  .header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;align-items:center}
+  .header>.brand{grid-column:1;grid-row:1;font-size:20px}
+  .language-switcher{grid-column:2;grid-row:1}
+  .language-switcher summary{min-width:76px;padding-inline:8px}
+  .header nav{grid-column:1/-1;grid-row:2;margin:0;gap:10px;font-size:12px}
+  .header nav a{min-height:36px;display:flex;align-items:center}
+  html:not([lang=en]) .hero h1{font-size:clamp(1.85rem,7.7vw,3.4rem)}
+  html:not([lang=en]) .demo-product h2{font-size:21px}
+  .demo-product .preview-label{line-height:1.35;display:block}
+}
+@media(max-width:360px){
+  .header{padding-inline:16px;gap:8px}
+  .header>.brand{font-size:17px;letter-spacing:-.6px;gap:4px}
+  .header>.brand img{width:32px}
+  .header nav{gap:7px;font-size:11px}
+  .header .nav-cta{padding:7px}
+  .language-switcher summary{min-width:72px}
+  html:not([lang=en]) .demo-product h2{font-size:19px}
+}
+
+.language-options{font-family:Atkinson,Arial,'Microsoft JhengHei','Malgun Gothic',sans-serif}

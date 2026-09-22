@@ -1,25 +1,38 @@
 ---
 import Site from '../layouts/Site.astro';
 import { business } from '../site';
+import { useLocale } from '../i18n';
+const { t, href } = useLocale(Astro.url);
+const notes = [
+    [t('m031'), t('m091')],
+    [t('m092'), t('m093')],
+    [t('m094'), t('m095')]
+  ];
+const reports = [
+  [t('m051'), t('m052')],
+  [t('m096'), t('m097')],
+  [t('m098'), t('m099')]
+];
+const demoCopy = { notes, values: [t('m023'), t('m100'), t('m101'), t('m102'), t('m024'), t('m103'), t('m025'), t('m104'), t('m030'), t('m105')] };
 ---
 <Site>
 <section class="hero wrap">
-<div class="hero-copy"><p class="eyebrow">Small details. A different experience.</p><h1>Good products.<br/><em>Fewer question marks.</em></h1><p class="lede">See what makes a shopper hesitate. Turn your product page into a clearer buying experience, one considered improvement at a time.</p><div class="actions"><a class="button" href="/contact/">Discuss your page <span aria-hidden="true">↗</span></a><a class="text-link" href="/sample/">See the sample report →</a></div></div>
-<aside class="review-preview interactive-review" aria-label="Interactive fictional product-page review">
-<div class="preview-heading"><img src="/brand/mark.svg" width="44" height="44" alt=""/><span>The clarity lab</span><span class="lab-label">Try it yourself</span></div>
-<div class="demo-controls" hidden><div class="view-toggle" role="group" aria-label="Compare sample copy"><button type="button" data-view="before" aria-pressed="true">Before</button><button type="button" data-view="after" aria-pressed="false">After review ↗</button></div></div>
-<div class="demo-stage" data-mode="before"><div class="product-visual" aria-hidden="true"><span class="product-word">everyday.</span><div class="cup-object"><span>every<br/>day.</span></div><span class="product-caption">A fictional cup collection</span></div><div class="demo-product"><span class="preview-label">THE EVERYDAY COLLECTION</span><h2 id="demo-title">Everyday cups</h2><p class="demo-price" id="demo-price">$18</p><p id="demo-detail">Choose: Small / Large</p><div class="demo-cart" id="demo-cart">Buy now</div><small>Illustration only. No checkout.</small></div></div>
-<div class="hotspots" hidden role="group" aria-label="Explore review findings"><button type="button" data-finding="0" aria-pressed="true">01 Quantity</button><button type="button" data-finding="1" aria-pressed="false">02 Options</button><button type="button" data-finding="2" aria-pressed="false">03 Next action</button></div>
-<div class="finding-note" aria-live="polite" aria-atomic="true"><span id="finding-label">What’s missing?</span><p id="finding-text">Is $18 for one cup or a pack? The quantity is missing beside the price.</p></div>
-<p class="preview-caption">Self-created demonstration. Not a client result.</p><noscript><p class="preview-caption"><a href="/sample/">Read the full before-and-after sample →</a></p></noscript></aside>
+<div class="hero-copy"><p class="eyebrow">{t('m011')}</p><h1>{t('m012')}<br/><em>{t('m013')}</em></h1><p class="lede">{t('m014')}</p><div class="actions"><a class="button" href={href("/contact/")}>{t('m015')} <span aria-hidden="true">↗</span></a><a class="text-link" href={href("/sample/")}>{t('m016')}</a></div></div>
+<aside class="review-preview interactive-review" data-review-copy={JSON.stringify(demoCopy)} aria-label={t('m087')}>
+<div class="preview-heading"><img src="/brand/mark.svg" width="44" height="44" alt=""/><span>{t('m017')}</span><span class="lab-label">{t('m018')}</span></div>
+<div class="demo-controls" hidden><div class="view-toggle" role="group" aria-label={t('m088')}><button type="button" data-view="before" aria-pressed="true">{t('m019')}</button><button type="button" data-view="after" aria-pressed="false">{t('m020')}</button></div></div>
+<div class="demo-stage" data-mode="before"><div class="product-visual" aria-hidden="true"><span class="product-word">everyday.</span><div class="cup-object"><span>every<br/>day.</span></div><span class="product-caption">{t('m021')}</span></div><div class="demo-product"><span class="preview-label">{t('m022')}</span><h2 id="demo-title">{t('m023')}</h2><p class="demo-price" id="demo-price">$18</p><p id="demo-detail">{t('m024')}</p><div class="demo-cart" id="demo-cart">{t('m025')}</div><small>{t('m026')}</small></div></div>
+<div class="hotspots" hidden role="group" aria-label={t('m089')}><button type="button" data-finding="0" aria-pressed="true">{t('m027')}</button><button type="button" data-finding="1" aria-pressed="false">{t('m028')}</button><button type="button" data-finding="2" aria-pressed="false">{t('m029')}</button></div>
+<div class="finding-note" aria-live="polite" aria-atomic="true"><span id="finding-label">{t('m030')}</span><p id="finding-text">{t('m031')}</p></div>
+<p class="preview-caption">{t('m032')}</p><noscript><p class="preview-caption"><a href={href("/sample/")}>{t('m033')}</a></p></noscript></aside>
 </section>
-<section class="wrap service-section section" id="service"><div class="section-heading"><p class="eyebrow">Small scope. Thoughtful work.</p><h2>See your page<br/>through a shopper’s eyes.</h2><p>One product page. One visitor action. A human-reviewed look at what shoppers see, understand and do next.</p><a class="text-link" href="/about/">Our approach ↗</a></div><div class="review-topics"><article><span class="topic-number">01</span><div><h3>Make the offer clear.</h3><p>Product details, quantities and options. Can a shopper understand exactly what they are choosing?</p></div></article><article><span class="topic-number">02</span><div><h3>Find the friction.</h3><p>Check the observable journey. Separate reproducible issues from recommendations and untested assumptions.</p></div></article><article><span class="topic-number">03</span><div><h3>Leave with a useful plan.</h3><p>Dated evidence, up to three supported priorities, and one annotated improvement concept or copy comparison.</p></div></article></div></section>
-<section class="wrap deliverable-section"><div class="section-heading"><p class="eyebrow">Open the deliverable</p><h2>More than a score.<br/>Something you can use.</h2></div><div class="deliverable-controls" hidden role="group" aria-label="Explore report contents"><button type="button" data-report="0" aria-pressed="true">The evidence</button><button type="button" data-report="1" aria-pressed="false">The priorities</button><button type="button" data-report="2" aria-pressed="false">The next step</button></div><div class="deliverable-panel" aria-live="polite" aria-atomic="true"><span id="report-number" aria-hidden="true">01</span><div><h3 id="report-title">See exactly what we saw.</h3><p id="report-description">The page, viewport, observation date and reproducible steps. Screenshots give every finding a place and a context.</p><a class="text-link" href="/sample/">Explore the sample report →</a></div></div></section>
-<section class="offer wrap"><div><p class="eyebrow">The single-page review</p><h2>A small start.<br/>A concrete deliverable.</h2><ul class="checks"><li>One product page, desktop and mobile viewports</li><li>Evidence-led English report and test limitations</li><li>Up to three priorities, where supported by evidence</li><li>One improvement concept and one factual revision</li></ul></div><div class="price"><span>Proposed introductory fee</span><strong>{business.price}</strong><p>Within 2 business days after scope agreement and complete inputs.</p><a class="button" href="/contact/">Check whether it's a fit ↗</a><small>Written quote and payment terms agreed before work. Implementation and third-party costs excluded.</small></div></section>
-<section class="wrap section process"><div class="section-heading"><h2>From a page to a plan.</h2></div><div class="steps"><article><span class="step-number">01</span><h3>Share the goal.</h3><p>Your URL, market and intended visitor action. No administrator password needed.</p></article><article><span class="step-number">02</span><h3>Agree the scope.</h3><p>Confirm checks, fee and delivery. If access prevents testing, agree an alternative before proceeding.</p></article><article><span class="step-number">03</span><h3>Review the evidence.</h3><p>Receive observations and recommendations. Small implementation work can be quoted separately.</p></article></div></section>
-<section class="wrap safety"><div><h2>Your live store<br/>deserves care.</h2></div><p>Implementation starts with agreed permissions, backup coverage and a preview or unpublished theme. Publishing needs your approval. Recovery depends on your platform and apps; we don't promise zero data loss or guaranteed conversion gains.</p></section>
-<section class="wrap section faq"><h2>Before we start.</h2><details><summary>Is this an automated AI audit?</summary><p>This is a human-reviewed service supported by tools. Findings are checked and limitations disclosed; an automated score alone is not the deliverable.</p></details><details><summary>Do you need access to my store admin?</summary><p>Not for the public product-page review. Implementation access is scoped separately. Never send passwords, payment data or customer exports with your initial request.</p></details><details><summary>Can you guarantee more sales?</summary><p>No. Acceptance is based on the agreed report and evidence, not a sales target. Recommendations can be tested later with suitable traffic and measurement.</p></details><details><summary>Is the sample a real client case?</summary><p>No. It is a clearly labelled self-created demonstration. We do not present sample work as paid client results.</p></details></section>
-<section class="closing wrap"><img src="/brand/mark.svg" width="80" height="80" alt=""/><h2>Start with one page.<br/><em>Let’s make it clearer.</em></h2><a class="button" href="/contact/">Prepare your review brief ↗</a></section>
+<section class="wrap service-section section" id="service"><div class="section-heading"><p class="eyebrow">{t('m034')}</p><h2>{t('m035')}<br/>{t('m036')}</h2><p>{t('m037')}</p><a class="text-link" href={href("/about/")}>{t('m038')}</a></div><div class="review-topics"><article><span class="topic-number">01</span><div><h3>{t('m039')}</h3><p>{t('m040')}</p></div></article><article><span class="topic-number">02</span><div><h3>{t('m041')}</h3><p>{t('m042')}</p></div></article><article><span class="topic-number">03</span><div><h3>{t('m043')}</h3><p>{t('m044')}</p></div></article></div></section>
+<section class="wrap deliverable-section"><div class="section-heading"><p class="eyebrow">{t('m045')}</p><h2>{t('m046')}<br/>{t('m047')}</h2></div><div class="deliverable-controls" hidden role="group" aria-label={t('m090')}><button type="button" data-report="0" aria-pressed="true">{t('m048')}</button><button type="button" data-report="1" aria-pressed="false">{t('m049')}</button><button type="button" data-report="2" aria-pressed="false">{t('m050')}</button></div><div class="deliverable-panel" data-report-copy={JSON.stringify(reports)} aria-live="polite" aria-atomic="true"><span id="report-number" aria-hidden="true">01</span><div><h3 id="report-title">{t('m051')}</h3><p id="report-description">{t('m052')}</p><a class="text-link" href={href("/sample/")}>{t('m053')}</a></div></div></section>
+<section class="offer wrap"><div><p class="eyebrow">{t('m054')}</p><h2>{t('m055')}<br/>{t('m056')}</h2><ul class="checks"><li>{t('m057')}</li><li>{t('m058')}</li><li>{t('m059')}</li><li>{t('m060')}</li></ul></div><div class="price"><span>{t('m061')}</span><strong>{business.price}</strong><p>{t('m062')}</p><a class="button" href={href("/contact/")}>{t('m063')}</a><small>{t('m064')}</small></div></section>
+<section class="wrap section process"><div class="section-heading"><h2>{t('m065')}</h2></div><div class="steps"><article><span class="step-number">01</span><h3>{t('m066')}</h3><p>{t('m067')}</p></article><article><span class="step-number">02</span><h3>{t('m068')}</h3><p>{t('m069')}</p></article><article><span class="step-number">03</span><h3>{t('m070')}</h3><p>{t('m071')}</p></article></div></section>
+<section class="wrap safety"><div><h2>{t('m072')}<br/>{t('m073')}</h2></div><p>{t('m074')}</p></section>
+<section class="wrap section faq"><h2>{t('m075')}</h2><details><summary>{t('m076')}</summary><p>{t('m077')}</p></details><details><summary>{t('m078')}</summary><p>{t('m079')}</p></details><details><summary>{t('m080')}</summary><p>{t('m081')}</p></details><details><summary>{t('m082')}</summary><p>{t('m083')}</p></details></section>
+<section class="closing wrap"><img src="/brand/mark.svg" width="80" height="80" alt=""/><h2>{t('m084')}<br/><em>{t('m085')}</em></h2><a class="button" href={href("/contact/")}>{t('m086')}</a></section>
 <script>
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 const demo = document.querySelector<HTMLElement>('.interactive-review');
@@ -27,18 +40,14 @@ if (demo) {
   demo.querySelectorAll<HTMLElement>('[hidden]').forEach(el => el.hidden = false);
   let after = false;
   let finding = 0;
-  const notes = [
-    ['Is $18 for one cup or a pack? The quantity is missing beside the price.', '“$18 per pack of 50” tells the shopper exactly what the price buys.'],
-    ['“Small / Large” does not tell the shopper the actual capacity.', '“12 oz” names the capacity. “Lids sold separately” clarifies what is included.'],
-    ['“Buy now” does not confirm the selected quantity or total.', '“Add 1 pack · $18” connects the next action to a specific purchase.']
-  ];
+  const { notes, values } = JSON.parse(demo.dataset.reviewCopy!) as { notes: string[][]; values: string[] };
   const setText = (id: string, value: string) => { const el = document.getElementById(id); if (el) el.textContent = value; };
   const update = () => {
-    setText('demo-title', after ? 'Everyday cups · 12 oz' : 'Everyday cups');
-    setText('demo-price', after ? '$18 / pack of 50' : '$18');
-    setText('demo-detail', after ? '50 cups · 12 oz each. Lids sold separately.' : 'Choose: Small / Large');
-    setText('demo-cart', after ? 'Add 1 pack · $18' : 'Buy now');
-    setText('finding-label', after ? 'The suggested improvement' : 'What’s missing?');
+    setText('demo-title', after ? values[1] : values[0]);
+    setText('demo-price', after ? values[3] : values[2]);
+    setText('demo-detail', after ? values[5] : values[4]);
+    setText('demo-cart', after ? values[7] : values[6]);
+    setText('finding-label', after ? values[9] : values[8]);
     setText('finding-text', notes[finding][after ? 1 : 0]);
     demo.querySelector<HTMLElement>('.demo-stage')!.dataset.mode = after ? 'after' : 'before';
     demo.querySelectorAll<HTMLButtonElement>('[data-view]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.view === 'after') === after)));
@@ -48,11 +57,7 @@ if (demo) {
   demo.querySelectorAll<HTMLButtonElement>('[data-view]').forEach(b => b.addEventListener('click', () => {after = b.dataset.view === 'after'; update();}));
   demo.querySelectorAll<HTMLButtonElement>('[data-finding]').forEach(b => b.addEventListener('click', () => {finding = Number(b.dataset.finding); update();}));
 }
-const reports = [
-  ['See exactly what we saw.', 'The page, viewport, observation date and reproducible steps. Screenshots give every finding a place and a context.'],
-  ['Know what deserves attention first.', 'Up to three priorities, supported by evidence. Observed problems are kept separate from suggestions and checks we could not perform.'],
-  ['Have a concrete starting point.', 'One annotated improvement concept or copy comparison, plus one factual revision. Implementation can be scoped and quoted separately.']
-];
+const reports = JSON.parse(document.querySelector<HTMLElement>('[data-report-copy]')!.dataset.reportCopy!) as string[][];
 const controls = document.querySelector<HTMLElement>('.deliverable-controls');
 if (controls) controls.hidden = false;
 document.querySelectorAll<HTMLButtonElement>('[data-report]').forEach(b => b.addEventListener('click', () => {

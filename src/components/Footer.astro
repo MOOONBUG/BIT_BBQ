@@ -1,1 +1,5 @@
-<footer class="footer"><div><a class="brand" href="/"><b>Mooon</b>StoreClinic</a><p>Clarity for your storefront.</p></div><div><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Service terms</a><small>© {new Date().getFullYear()} MooonStoreClinic</small></div></footer>
+---
+import { useLocale } from '../i18n';
+const { t, href } = useLocale(Astro.url);
+---
+<footer class="footer"><div><a class="brand" href={href("/")}><b>Mooon</b>StoreClinic</a><p>{t('m007')}</p></div><div><a href={href("/contact/")}>{t('m008')}</a><a href={href("/privacy/")}>{t('m009')}</a><a href={href("/terms/")}>{t('m010')}</a><small>© {new Date().getFullYear()} MooonStoreClinic</small></div></footer>

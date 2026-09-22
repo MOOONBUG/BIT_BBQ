@@ -1,4 +1,6 @@
 ---
 import Site from '../layouts/Site.astro';
+import { useLocale } from '../i18n';
+const { t, href } = useLocale(Astro.url);
 ---
-<Site title="About — MooonStoreClinic"><section class="wrap prose section"><p class="eyebrow">ABOUT THE SERVICE</p><h1>Independent support.<br/>Focused on your storefront.</h1><p class="lede">MooonStoreClinic is an independent service led by Mooon, helping online store operators examine product-page clarity and the next purchase step.</p><h2>Start with something specific.</h2><p>We begin with one page and an agreed goal. Shopify is the initial focus; product categories can vary. The service is in its introductory stage, and our published sample is demonstration work rather than a client case study.</p><h2>Evidence before promises.</h2><p>Confirmed issues, improvement ideas and unknowns are separated. An attractive mockup is not proof of a conversion lift. Work is accepted against agreed deliverables.</p><h2>Built around clear boundaries.</h2><p>Reviews and implementation are separate scopes. Live changes require agreed access, a preview, approval and a recovery plan.</p><a class="button" href="/sample/">See the sample report →</a></section></Site>
+<Site title={t('m116')}><section class="wrap prose section"><p class="eyebrow">{t('m106')}</p><h1>{t('m107')}<br/>{t('m108')}</h1><p class="lede">{t('m109')}</p><h2>{t('m110')}</h2><p>{t('m111')}</p><h2>{t('m112')}</h2><p>{t('m113')}</p><h2>{t('m114')}</h2><p>{t('m115')}</p><a class="button" href={href("/sample/")}>{t('m016')}</a></section></Site>

@@ -1,4 +1,6 @@
 ---
 import Site from '../layouts/Site.astro';
+import { useLocale } from '../i18n';
+const { t, href } = useLocale(Astro.url);
 ---
-<Site title="Page not found — MooonStoreClinic"><section class="wrap prose section"><p class="eyebrow">404 / PAGE NOT FOUND</p><h1>Let's get you back<br/>to the right page.</h1><p>This page may have moved as our website changed.</p><a class="button" href="/">Back to the homepage →</a></section></Site>
+<Site title={t('m188')}><section class="wrap prose section"><p class="eyebrow">{t('m183')}</p><h1>{t('m184')}<br/>{t('m185')}</h1><p>{t('m186')}</p><a class="button" href={href("/")}>{t('m187')}</a></section></Site>

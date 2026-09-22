@@ -1,0 +1,17 @@
+---
+import { locales, pageSlugs } from '../../i18n';
+import Home from '../index.astro';
+import Sample from '../sample.astro';
+import About from '../about.astro';
+import Contact from '../contact.astro';
+import Privacy from '../privacy.astro';
+import Terms from '../terms.astro';
+
+export function getStaticPaths() {
+  return locales.filter(locale => locale !== 'en').flatMap(locale =>
+    pageSlugs.map(page => ({ params: { locale, page: page || undefined } })));
+}
+const pages = { '': Home, sample: Sample, about: About, contact: Contact, privacy: Privacy, terms: Terms };
+const Page = pages[(Astro.params.page || '') as keyof typeof pages];
+---
+<Page />

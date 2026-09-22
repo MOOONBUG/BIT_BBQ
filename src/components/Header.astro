@@ -1,1 +1,6 @@
-<header class="header"><a href="/" class="brand" aria-label="MooonStoreClinic home"><img src="/brand/mark.svg" width="56" height="56" alt=""/><span><b>Mooon</b>StoreClinic</span></a><nav aria-label="Main navigation"><a href="/#service">The review</a><a href="/sample/">Sample report</a><a href="/about/">About</a><a class="nav-cta" href="/contact/">Let's talk ↗</a></nav></header>
+---
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { useLocale } from '../i18n';
+const { t, href } = useLocale(Astro.url);
+---
+<header class="header"><a href={href("/")} class="brand" aria-label={t('m005')}><img src="/brand/mark.svg" width="56" height="56" alt=""/><span><b>Mooon</b>StoreClinic</span></a><nav aria-label={t('m006')}><a href={href("/#service")}>{t('m001')}</a><a href={href("/sample/")}>{t('m002')}</a><a href={href("/about/")}>{t('m003')}</a><a class="nav-cta" href={href("/contact/")}>{t('m004')}</a></nav><LanguageSwitcher /></header>

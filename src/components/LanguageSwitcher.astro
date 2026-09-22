@@ -1,0 +1,31 @@
+---
+import { languages, locales, localizePath, pageSlugs, useLocale } from '../i18n';
+const { locale, t } = useLocale(Astro.url);
+const page = localizePath(Astro.url.pathname, 'en');
+const translatedPage = pageSlugs.some(slug => page === (slug ? `/${slug}/` : '/')) ? page : '/';
+---
+<details class="language-switcher">
+  <summary aria-label={`${t('language')}: ${languages[locale].name}`}>
+    <span class="language-symbol" aria-hidden="true">文<span>A</span></span>
+    <span lang={languages[locale].tag}>{languages[locale].short}</span>
+  </summary>
+  <ul class="language-options" aria-label={t('language')}>
+    {locales.map(lang => <li><a href={localizePath(translatedPage, lang)} hreflang={languages[lang].tag} aria-current={lang === locale ? 'true' : undefined}><span lang={languages[lang].tag}>{languages[lang].name}</span><span aria-hidden="true">{lang === locale ? '✓' : ''}</span></a></li>)}
+  </ul>
+</details>
+<script>
+  const picker = document.querySelector<HTMLDetailsElement>('.language-switcher');
+  if (picker) {
+    const trigger = picker.querySelector('summary')!;
+    const close = (focus = false) => { picker.open = false; if (focus) trigger.focus(); };
+    document.addEventListener('click', event => { if (!picker.contains(event.target as Node)) close(); });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && picker.open) { event.preventDefault(); close(picker.contains(document.activeElement)); }
+    });
+    picker.addEventListener('focusout', event => { if (!picker.contains(event.relatedTarget as Node)) close(); });
+    // Real links work without JavaScript; enhancement also preserves an in-page anchor.
+    picker.querySelectorAll<HTMLAnchorElement>('a').forEach(link => {
+      link.addEventListener('click', () => { link.hash = window.location.hash; });
+    });
+  }
+</script>

@@ -2,6 +2,10 @@
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
+import { useLocale, languages, locales, localizePath, pageSlugs } from '../i18n';
+const { locale } = useLocale(Astro.url);
+const barePath = localizePath(Astro.url.pathname, 'en');
+const hasAlternates = pageSlugs.some(slug => barePath === (slug ? `/${slug}/` : '/'));
 
 interface Props {
 	title: string;
@@ -26,6 +30,9 @@ const { title, description, image = '/brand/social.png' } = Astro.props;
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+{hasAlternates && <>{locales.map(lang => <link rel="alternate" hreflang={languages[lang].tag} href={new URL(localizePath(barePath, lang), Astro.site)} />)}<link rel="alternate" hreflang="x-default" href={new URL(barePath, Astro.site)} /></>}
+<meta property="og:locale" content={languages[locale].og} />
+{hasAlternates && locales.filter(lang => lang !== locale).map(lang => <meta property="og:locale:alternate" content={languages[lang].og} />)}
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
