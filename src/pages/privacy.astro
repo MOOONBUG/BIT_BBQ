@@ -3,4 +3,4 @@ import Site from '../layouts/Site.astro';
 import { useLocale } from '../i18n';
 const { t, href } = useLocale(Astro.url);
 ---
-<Site title={t('m169')}><section class="wrap prose section"><p class="eyebrow">{t('m159')}</p><h1>{t('m160')}</h1><p>{t('m161')}</p><h2>{t('m162')}</h2><p>{t('m163')}</p><h2>{t('m164')}</h2><p>{t('m165')}</p><h2>{t('m166')}</h2><p>{t('m167')}</p><a href={href("/contact/")}>{t('m168')}</a></section></Site>
+<Site title={t('m169')}><section class="wrap prose section"><p class="eyebrow">{t('m159')}</p><h1>{t('m160')}</h1><p>{t('m161')}</p><h2>{t('m162')}</h2><p>{t('m163')}</p><h2>{t('m164')}</h2><p>{t('m165')}</p><h2>{t('enquiryPrivacyTitle')}</h2><p>{t('enquiryPrivacyBody')}</p><h2>{t('m166')}</h2><p>{t('m167')}</p><a href={href("/contact/")}>{t('m168')}</a></section></Site>

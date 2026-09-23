@@ -20,7 +20,8 @@
     "deploy": "astro build && wrangler deploy",
     "dev": "astro dev",
     "preview": "astro build && wrangler dev",
-    "types": "wrangler types"
+    "types": "wrangler types --strict-vars=false",
+    "test": "node tests/receiver.cjs"
   },
   "type": "module"
 }

@@ -29,3 +29,6 @@ pnpm-debug.log*
 
 # Local review artifacts
 review-logs/
+
+# Windows-encrypted local setup credentials
+.cloud-setup/

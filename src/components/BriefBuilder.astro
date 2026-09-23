@@ -1,73 +1,38 @@
 ---
 import { useLocale } from '../i18n';
 import { business } from '../site';
-const { t } = useLocale(Astro.url);
-const labels = [t('brief1'), t('brief2'), t('brief3'), t('brief4'), t('brief5')];
-const copy = { labels, title: t('briefTitle'), scope: t('briefScope'), details: [t('m057'), t('m058'), t('m059'), t('m060')], fee: t('m061'), delivery: t('m062'), terms: t('m064'), copied: t('briefCopied'), error: t('briefCopyError'), urlError: t('briefUrlError'), subject: t('enquirySubject'), email: business.email };
+const { t, locale, href } = useLocale(Astro.url);
+const labels = [t('enquiryEmail'), t('brief1'), t('brief2'), t('brief3'), t('brief4'), t('brief5')];
+const copy = { labels, locale, title: t('briefTitle'), scope: t('briefScope'), details: [t('m057'), t('m058'), t('m059'), t('m060')], fee: t('m061'), delivery: t('m062'), terms: t('m064'), copied: t('briefCopied'), copyError: t('briefCopyError'), urlError: t('briefUrlError'), subject: t('enquirySubject'), email: business.email, sending: t('enquirySending'), unknown: t('enquiryUnknown'), invalid: t('enquiryInvalid'), verification: t('enquiryVerification'), rate: t('enquiryRate'), unavailable: t('enquiryUnavailable'), conflict: t('enquiryConflict'), consent: t('enquiryConsentError'), fallback: t('briefLocal'), online: t('enquiryOnline') };
 ---
 <section class="brief-builder" hidden data-brief={JSON.stringify(copy)} aria-labelledby="brief-heading">
-  <div class="brief-progress" aria-hidden="true"><span data-step-label>01</span> / 02</div>
+  <div class="brief-progress" aria-hidden="true"><span data-step-label>01</span> / <span data-step-total>02</span></div>
   <h2 id="brief-heading">{t('m147')}</h2>
-  <p>{t('briefIntro')}</p>
+  <p>{t('enquiryIntro')}</p>
   <form id="brief-form">
-    <label for="brief-url">{t('m149')}<input id="brief-url" name="page" type="url" inputmode="url" placeholder="https://your-store.com/products/example" required maxlength="500" autocomplete="url" aria-describedby="brief-url-error"/><span id="brief-url-error" class="field-error" aria-live="polite"></span></label>
+<label for="brief-contact">{t('enquiryEmail')}<input id="brief-contact" name="email" type="email" autocomplete="email" required maxlength="254" /></label>
+    <label for="brief-url">{t('m149')}<input id="brief-url" name="pageUrl" type="url" inputmode="url" placeholder="https://your-store.com/products/example" required maxlength="500" autocomplete="url" aria-describedby="brief-url-error"/><span id="brief-url-error" class="field-error" aria-live="polite"></span></label>
     <label for="brief-market">{t('m150')}<input id="brief-market" name="market" type="text" required maxlength="160"/></label>
     <label for="brief-goal">{t('m151')}<textarea id="brief-goal" name="goal" required maxlength="400" rows="3"></textarea></label>
     <label for="brief-issue">{t('m152')} <small>({t('briefOptional')})</small><textarea id="brief-issue" name="issue" maxlength="400" rows="3"></textarea></label>
-    <label for="brief-time">{t('m153')} <small>({t('briefOptional')})</small><input id="brief-time" name="time" type="text" maxlength="160"/></label>
+    <label for="brief-time">{t('m153')} <small>({t('briefOptional')})</small><input id="brief-time" name="preferredTime" type="text" maxlength="160"/></label>
     <button class="button" type="submit">{t('briefReview')}</button>
   </form>
   <div id="brief-summary" hidden>
     <h3 id="brief-summary-heading" tabindex="-1">{t('briefSummary')}</h3>
     <div class="brief-scope"><b>{t('briefScope')}</b><p>{t('m057')}</p><strong>USD 60</strong><p>{t('m062')}</p><small>{t('m064')}</small></div>
     <pre id="brief-output" tabindex="0"></pre>
-    <div class="actions"><a class="button" id="brief-email" href={`mailto:${business.email}`}>{t('briefEmail')}</a><button class="secondary-button" id="brief-copy" type="button">{t('briefCopy')}</button><button class="text-button" id="brief-edit" type="button">{t('briefEdit')}</button></div>
+    <div id="brief-direct" hidden><label class="brief-consent"><input type="checkbox" id="brief-ack"/><span>{t('enquiryConsent')} <a href={href('/privacy/')} target="_blank" rel="noopener noreferrer">{t('enquiryPrivacy')}</a></span></label><div id="brief-challenge"></div></div>
+<div class="actions"><button class="button" id="brief-send" type="button" hidden>{t('enquirySubmit')}</button><a class="secondary-button" id="brief-email" href={`mailto:${business.email}`}>{t('briefEmail')}</a><button class="secondary-button" id="brief-copy" type="button">{t('briefCopy')}</button><button class="text-button" id="brief-edit" type="button">{t('briefEdit')}</button></div>
     <p id="brief-status" class="micro" role="status"></p>
   </div>
-  <p class="micro">{t('briefLocal')}</p>
+  <div id="brief-received" class="brief-scope" hidden><h3 tabindex="-1" id="brief-received-heading">{t('enquiryReceived')}</h3><p class="micro">{t('enquiryReference')}</p><p id="brief-reference"></p><p>{t('enquiryNext')}</p><p class="micro">{t('enquiryNotOrder')}</p></div>
+<p class="micro" id="brief-mode">{t('briefLocal')}</p>
   <p class="micro">{t('briefSafe')}</p>
 </section>
 <script>
-const builder = document.querySelector<HTMLElement>('[data-brief]');
-if (builder) {
-  builder.hidden = false;
-  const copy = JSON.parse(builder.dataset.brief!) as { labels: string[]; title: string; scope: string; details: string[]; fee: string; delivery: string; terms: string; copied: string; error: string; urlError: string; subject: string; email: string };
-  const form = builder.querySelector<HTMLFormElement>('#brief-form')!;
-  const urlInput = builder.querySelector<HTMLInputElement>('#brief-url')!;
-  const summary = builder.querySelector<HTMLElement>('#brief-summary')!;
-  const output = builder.querySelector<HTMLElement>('#brief-output')!;
-  const status = builder.querySelector<HTMLElement>('#brief-status')!;
-  const error = builder.querySelector<HTMLElement>('#brief-url-error')!;
-  const validateUrl = () => {
-    let valid = false;
-    try { const u = new URL(urlInput.value); valid = ['https:', 'http:'].includes(u.protocol) && Boolean(u.hostname) && !u.username && !u.password; } catch {}
-    urlInput.setCustomValidity(valid || !urlInput.value ? '' : copy.urlError);
-    error.textContent = valid || !urlInput.value ? '' : copy.urlError;
-    return valid;
-  };
-  urlInput.addEventListener('input', validateUrl);
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    if (!validateUrl() || !form.reportValidity()) return;
-    const values = ['page', 'market', 'goal', 'issue', 'time'].map(name => String(new FormData(form).get(name) || '').trim());
-    const text = [copy.title, '', ...values.flatMap((value, i) => [copy.labels[i], value || '—', '']), copy.scope, ...copy.details, '', `${copy.fee}: USD 60`, copy.delivery, copy.terms].join('\n');
-    output.textContent = text;
-    builder.querySelector<HTMLAnchorElement>('#brief-email')!.href = `mailto:${copy.email}?subject=${encodeURIComponent(copy.subject)}&body=${encodeURIComponent(text)}`;
-    form.hidden = true;
-    summary.hidden = false;
-    builder.querySelector('[data-step-label]')!.textContent = '02';
-    builder.querySelector<HTMLElement>('#brief-summary-heading')!.focus();
-  });
-  builder.querySelector('#brief-edit')!.addEventListener('click', () => {
-    summary.hidden = true;
-    form.hidden = false;
-    status.textContent = '';
-    builder.querySelector('[data-step-label]')!.textContent = '01';
-    urlInput.focus();
-  });
-  builder.querySelector('#brief-copy')!.addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(output.textContent || ''); status.textContent = copy.copied; }
-    catch { status.textContent = copy.error; const range = document.createRange(); range.selectNodeContents(output); const selection = window.getSelection(); selection?.removeAllRanges(); selection?.addRange(range); output.focus(); }
-  });
-}
+import '../scripts/enquiry';
 </script>
+<style>
+.brief-builder .brief-consent{display:flex;align-items:flex-start;gap:12px;font-weight:400;font-size:14px}.brief-builder .brief-consent input{width:20px;min-height:20px;height:20px;flex:none;margin-top:4px}.brief-builder button:disabled{opacity:.6;cursor:wait}#brief-reference{font:700 15px/1.6 monospace;overflow-wrap:anywhere}#brief-challenge{min-height:65px;margin-block:20px}#brief-status{min-height:24px;white-space:pre-wrap}
+</style>
