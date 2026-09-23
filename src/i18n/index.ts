@@ -16,7 +16,7 @@ export const languages: Record<Locale, { name: string; short: string; tag: strin
   ru: { name: 'Русский', short: 'RU', tag: 'ru', og: 'ru_RU' },
   fr: { name: 'Français', short: 'FR', tag: 'fr', og: 'fr_FR' },
 };
-export const pageSlugs = ['', 'sample', 'about', 'contact', 'privacy', 'terms'] as const;
+export const pageSlugs = ['', 'sample', 'about', 'contact', 'free-review', 'privacy', 'terms'] as const;
 const dictionaries: Record<Locale, Record<MessageKey, string>> = { en, ko, ja, 'zh-hant': zhHant, ru, fr };
 
 export function getLocale(url: URL): Locale {

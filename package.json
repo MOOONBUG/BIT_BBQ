@@ -21,9 +21,10 @@
     "dev": "astro dev",
     "preview": "astro build && wrangler dev",
     "types": "wrangler types --config wrangler.api.json --strict-vars=false",
-    "test": "node tests/receiver.cjs",
+    "test": "node tests/receiver.cjs && node tests/micro-review.cjs",
     "deploy:api": "wrangler deploy --config wrangler.api.json",
-    "deploy:all": "npm run deploy && npm run deploy:api"
+    "deploy:all": "npm run deploy && npm run deploy:api",
+    "reviews": "node scripts/manage-reviews.mjs"
   },
   "type": "module"
 }

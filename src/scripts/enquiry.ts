@@ -10,7 +10,7 @@ const builder = document.querySelector<HTMLElement>('[data-brief]');
 if (builder) {
   builder.hidden = false;
   const copy = JSON.parse(builder.dataset.brief!) as {
-    labels: string[]; locale: string; title: string; scope: string; details: string[]; fee: string;
+    serviceType: string; policyVersion: string; configPath: string; price: string; paused: string; labels: string[]; locale: string; title: string; scope: string; details: string[]; fee: string;
     delivery: string; terms: string; copied: string; copyError: string; urlError: string;
     subject: string; email: string; sending: string; unknown: string; invalid: string;
     verification: string; rate: string; unavailable: string; conflict: string; consent: string;
@@ -27,9 +27,10 @@ if (builder) {
   let config: { enabled: boolean; siteKey: string } = { enabled: false, siteKey: '' };
   const configure = async () => {
     try {
-      const response = await fetch('/api/enquiries/config', { signal: AbortSignal.timeout(5000) });
+      const response = await fetch(copy.configPath, { signal: AbortSignal.timeout(5000) });
       if (!response.ok) return;
       const value = await response.json();
+      if (isObject(value) && typeof value.weeklyLimit === 'number') document.querySelectorAll<HTMLElement>('[data-weekly-limit]').forEach(el => { el.textContent = (el.dataset.weeklyLimit || '').replace('{limit}', String(value.weeklyLimit)); });
       if (isObject(value) && value.enabled === true && typeof value.siteKey === 'string' && value.siteKey) config = { enabled: true, siteKey: value.siteKey };
     } catch { /* Existing email and copy flow remains available. */ }
     get('[data-step-total]').textContent = config.enabled ? '03' : '02';
@@ -85,10 +86,10 @@ if (builder) {
     busy = true;
     try {
       await configured;
-      payload = { ...next, locale: copy.locale, acknowledgementVersion: '2026-09-23' };
+      payload = { ...next, locale: copy.locale, acknowledgementVersion: '2026-09-23', ...(copy.serviceType === 'free_trial' ? { serviceType: copy.serviceType, policyVersion: copy.policyVersion } : {}) };
       const serialized = JSON.stringify(payload);
       if (lastPayload !== serialized) { requestKey = crypto.randomUUID(); lastPayload = serialized; }
-      output.textContent = [copy.title, '', ...names.flatMap((name, i) => [copy.labels[i], next[name] || '—', '']), copy.scope, ...copy.details, '', `${copy.fee}: USD 60`, copy.delivery, copy.terms].join('\n');
+      output.textContent = [copy.title, '', ...names.flatMap((name, i) => [copy.labels[i], next[name] || '—', '']), copy.scope, ...copy.details, '', `${copy.fee}: ${copy.price}`, copy.delivery, copy.terms].join('\n');
       get<HTMLAnchorElement>('#brief-email').href = `mailto:${copy.email}?subject=${encodeURIComponent(copy.subject)}&body=${encodeURIComponent(output.textContent)}`;
       ack.checked = false;
       status.textContent = '';
@@ -120,7 +121,7 @@ if (builder) {
       if (!isObject(result)) throw Error('response');
       if (!response.ok) {
         const messages: Record<string, string> = { invalid: copy.invalid, too_large: copy.invalid, forbidden: copy.unavailable,
-          verification: copy.verification, rate_limited: copy.rate, unavailable: copy.unavailable, conflict: copy.conflict };
+          verification: copy.verification, rate_limited: copy.rate, unavailable: copy.unavailable, conflict: copy.conflict, paused: copy.paused };
         status.textContent = (typeof result.error === 'string' && messages[result.error]) || copy.unavailable;
         resetChallenge(); return;
       }

@@ -6,12 +6,13 @@ import About from '../about.astro';
 import Contact from '../contact.astro';
 import Privacy from '../privacy.astro';
 import Terms from '../terms.astro';
+import FreeReview from '../free-review.astro';
 
 export function getStaticPaths() {
   return locales.filter(locale => locale !== 'en').flatMap(locale =>
     pageSlugs.map(page => ({ params: { locale, page: page || undefined } })));
 }
-const pages = { '': Home, sample: Sample, about: About, contact: Contact, privacy: Privacy, terms: Terms };
+const pages = { '': Home, sample: Sample, about: About, contact: Contact, privacy: Privacy, terms: Terms, 'free-review': FreeReview };
 const Page = pages[(Astro.params.page || '') as keyof typeof pages];
 ---
 <Page />

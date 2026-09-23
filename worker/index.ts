@@ -1,6 +1,7 @@
+import { microReview } from '../shared/services';
 type Brief = {
   requestKey: string; email: string; pageUrl: string; market: string; goal: string;
-  issue: string; preferredTime: string; locale: string; acknowledgementVersion: string;
+  issue: string; preferredTime: string; locale: string; acknowledgementVersion: string; serviceType?: string; policyVersion?: string;
 };
 class RequestError extends Error {
   constructor(public status: number, public code: string) { super(code); }
@@ -56,6 +57,12 @@ function normalize(value: unknown): { brief: Brief; token: string } {
     || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(brief.email)
     || !['en', 'ko', 'ja', 'zh-hant', 'ru', 'fr'].includes(brief.locale)
     || brief.acknowledgementVersion !== '2026-09-23') throw new RequestError(422, 'invalid');
+  if (value.serviceType !== undefined && value.serviceType !== 'paid_enquiry' && value.serviceType !== microReview.type) throw new RequestError(422, 'invalid');
+  if (value.serviceType === microReview.type) {
+    if (value.policyVersion !== microReview.policyVersion) throw new RequestError(422, 'invalid');
+    brief.serviceType = microReview.type;
+    brief.policyVersion = microReview.policyVersion;
+  }
   try {
     const url = new URL(brief.pageUrl);
     if (!['http:', 'https:'].includes(url.protocol) || !url.hostname || url.username || url.password) throw Error();
@@ -107,31 +114,57 @@ async function receive(request: Request, env: Env, url: URL) {
     return reply(200, { id: previous.id, status: 'received' });
   }
   await verify(token, env, url.hostname);
+  const trial = brief.serviceType === microReview.type;
+  if (trial && !(await campaignOpen(env)).enabled) throw new RequestError(503, 'paused');
   const id = `MSC-${crypto.randomUUID()}`;
   const days = Number(env.RETENTION_DAYS);
   if (!Number.isInteger(days) || days < 1 || days > 365) throw new RequestError(503, 'unavailable');
+  const identityUrl = new URL(brief.pageUrl);
+  identityUrl.hash = '';
+  // Keep meaningful variant/query parameters; remove only known tracking parameters.
+  for (const key of [...identityUrl.searchParams.keys()]) if (/^(utm_|fbclid$|gclid$)/i.test(key)) identityUrl.searchParams.delete(key);
+  identityUrl.searchParams.sort();
+  identityUrl.pathname = identityUrl.pathname.replace(/\/$/, '') || '/';
+  const identity = hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${brief.email.toLowerCase()}|${identityUrl.href}`)));
+  // All reception metadata commits atomically with the enquiry and outbox.
   // Both rows commit together. Unique request_key handles concurrent submissions.
   await env.DB.batch([
     env.DB.prepare(`INSERT INTO enquiries(id, request_key, payload_hash, created_at, expires_at, locale,
-      email, page_url, market, goal, issue, preferred_time, acknowledgement_version)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(request_key) DO NOTHING`)
+      email, page_url, market, goal, issue, preferred_time, acknowledgement_version, service_type)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(request_key) DO NOTHING`)
       .bind(id, brief.requestKey, hash, now, now + days * 86400, brief.locale, brief.email, brief.pageUrl,
-        brief.market, brief.goal, brief.issue, brief.preferredTime, brief.acknowledgementVersion),
+        brief.market, brief.goal, brief.issue, brief.preferredTime, brief.acknowledgementVersion, trial ? microReview.type : 'paid_enquiry'),
     env.DB.prepare(`INSERT INTO notification_outbox(enquiry_id, next_attempt_at)
       SELECT id, ? FROM enquiries WHERE request_key = ? AND payload_hash = ?
       ON CONFLICT(enquiry_id) DO NOTHING`).bind(now, brief.requestKey, hash),
+    ...(trial ? [env.DB.prepare(`INSERT INTO free_reviews(enquiry_id,campaign_id,policy_version,delivery_language,identity_hash,duplicate_candidate,updated_at)
+      SELECT id, ?, ?, ?, ?, EXISTS(SELECT 1 FROM free_reviews WHERE identity_hash=? AND enquiry_id!=enquiries.id), ?
+      FROM enquiries WHERE request_key=? AND payload_hash=?
+      ON CONFLICT(enquiry_id) DO NOTHING`).bind(microReview.id, microReview.policyVersion, microReview.deliveryLanguage, identity, identity, now, brief.requestKey, hash)] : []),
   ]);
   const saved = await lookup();
   if (!saved) throw new RequestError(503, 'unavailable');
   if (saved.payload_hash !== hash) throw new RequestError(409, 'conflict');
   return reply(saved.id === id ? 201 : 200, { id: saved.id, status: 'received' });
 }
+async function campaignOpen(env: Env) {
+  const row = await env.DB.prepare(`SELECT enabled, weekly_limit, intake_limit,
+    (SELECT COUNT(*) FROM free_reviews WHERE campaign_id=c.id AND review_status IN ('received','waitlisted')) AS pending
+    FROM review_campaigns c WHERE id=?`).bind(microReview.id).first<{enabled:number; weekly_limit:number; intake_limit:number; pending:number}>();
+  return { enabled: Boolean(row && row.enabled === 1 && row.pending < row.intake_limit), weeklyLimit: row?.weekly_limit ?? microReview.weeklyLimit };
+}
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     try {
-      if (url.pathname === '/api/enquiries/config' && request.method === 'GET') {
+      if (url.pathname === '/api/free-reviews/config' && request.method === 'GET') {
+        const campaign = await campaignOpen(env);
+        const enabled = ready(env) && hosts(env).includes(url.hostname) && campaign.enabled;
+        return reply(200, { enabled, siteKey: enabled ? env.TURNSTILE_SITE_KEY : '', retentionDays: Number(env.RETENTION_DAYS),
+          weeklyLimit: campaign.weeklyLimit, deliveryLanguage: microReview.deliveryLanguage, policyVersion: microReview.policyVersion });
+      }
+      if (url.pathname === '/api/enquiries/config'  && request.method === 'GET') {
         const enabled = ready(env) && hosts(env).includes(url.hostname);
         return reply(200, { enabled, siteKey: enabled ? env.TURNSTILE_SITE_KEY : '', retentionDays: Number(env.RETENTION_DAYS) });
       }
@@ -139,6 +172,7 @@ export default {
       return await receive(request, env, url);
     } catch (error) {
       if (error instanceof RequestError) return reply(error.status, { error: error.code });
+      if (error instanceof Error && error.message.includes('trial_intake_paused')) return reply(503, { error: 'paused' });
       // Never log submitted content, credentials or provider response bodies.
       console.error(JSON.stringify({ event: 'enquiry_receive_failed' }));
       return reply(503, { error: 'unavailable' });

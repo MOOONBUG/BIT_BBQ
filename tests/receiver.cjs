@@ -25,6 +25,7 @@ async function setup() {
   const db = await mf.getD1Database('DB');
   const schema = fs.readFileSync(path.join(root, 'migrations/0001_enquiries.sql'), 'utf8').replace(/^--.*$/gm, '').replace(/\s+/g, ' ');
   await db.exec(schema);
+  await db.exec(fs.readFileSync(path.join(root, 'migrations/0002_micro_reviews.sql'), 'utf8').replace(/^--.*$/gm, '').replace(/\s+/g, ' '));
   return { mf, db, mock };
 }
 const brief = (patch = {}) => ({ requestKey: randomUUID(), email: 'owner@example.com', pageUrl: 'https://example.com/products/cups',
@@ -99,7 +100,8 @@ async function run() {
       assert.equal(await db.prepare('SELECT enquiry_id FROM notification_outbox WHERE enquiry_id = ?').bind(id).first(), null);
       assert.equal(await db.prepare('SELECT bucket FROM rate_limits WHERE bucket = ?').bind('expired-test-bucket').first(), null);
     });
-    fs.writeFileSync(path.join(root, '../form-stage1-20260923/receiver-results.json'), JSON.stringify({ passed: true, checks, environment: 'Local workerd + D1 SQLite; Turnstile API mocked; no email sent' }, null, 2));
+    fs.mkdirSync(path.join(root, 'review-logs'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'review-logs/receiver-results.json'), JSON.stringify({ passed: true, checks, environment: 'Local workerd + D1 SQLite; Turnstile API mocked; no email sent' }, null, 2));
   } finally { await mf.dispose(); }
 }
 if (require.main === module) run().catch(error => { console.error(error); process.exit(1); });

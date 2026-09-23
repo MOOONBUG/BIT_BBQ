@@ -2,7 +2,8 @@
 import Site from '../layouts/Site.astro';
 import { business } from '../site';
 import { useLocale } from '../i18n';
-const { t, href } = useLocale(Astro.url);
+import { microCopy } from '../i18n/micro';
+const { t, href, locale } = useLocale(Astro.url);
 const notes = [
     [t('m031'), t('m091')],
     [t('m092'), t('m093')],
@@ -33,6 +34,7 @@ const demoCopy = { notes, values: [t('m023'), t('m100'), t('m101'), t('m102'), t
 <section class="wrap section process"><div class="section-heading"><h2>{t('m065')}</h2></div><div class="steps"><article><span class="step-number">01</span><h3>{t('m066')}</h3><p>{t('m067')}</p></article><article><span class="step-number">02</span><h3>{t('m068')}</h3><p>{t('m069')}</p></article><article><span class="step-number">03</span><h3>{t('m070')}</h3><p>{t('m071')}</p></article></div></section>
 <section class="wrap safety"><div><h2>{t('m072')}<br/>{t('m073')}</h2></div><p>{t('m074')}</p></section>
 <section class="wrap section faq"><h2>{t('m075')}</h2><details><summary>{t('m076')}</summary><p>{t('m077')}</p></details><details><summary>{t('m078')}</summary><p>{t('m079')}</p></details><details><summary>{t('m080')}</summary><p>{t('m081')}</p></details><details><summary>{t('m082')}</summary><p>{t('m083')}</p></details></section>
+<section class="wrap section"><p class="eyebrow">{microCopy[locale].nav}</p><h2>{microCopy[locale].title}</h2><p>{microCopy[locale].scope}</p><a class="button" href={href("/free-review/")}>{microCopy[locale].apply}</a></section>
 <section class="closing wrap"><img src="/brand/mark.svg" width="80" height="80" alt=""/><h2>{t('m084')}<br/><em>{t('m085')}</em></h2><a class="button" href={href("/contact/")}>{t('m086')}</a></section>
 <script>
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
