@@ -4,7 +4,7 @@ const path = require('node:path');
 const { randomUUID } = require('node:crypto');
 const root = path.resolve(__dirname, '..');
 const { build } = require(require.resolve('esbuild', { paths: [path.join(root, 'node_modules/wrangler')] }));
-const { Miniflare } = require(require.resolve('miniflare', { paths: [path.join(root, 'node_modules/wrangler')] }));
+const { Miniflare, convertV4MiniflareOptions } = require(require.resolve('miniflare', { paths: [path.join(root, 'node_modules/wrangler')] }));
 async function setup() {
   // Test-only adapter invokes the actual scheduled handler; never included in a deployment build.
   const built = await build({ stdin: { contents: `import worker from './worker/index.ts';
@@ -18,10 +18,10 @@ async function setup() {
     if (token === 'provider-down') return new Response(null, { status: 503 });
     return Response.json({ success: token !== 'invalid-token', hostname: token === 'wrong-host' ? 'evil.example' : 'localhost', action: token === 'wrong-action' ? 'other' : 'enquiry' });
   };
-  const mf = new Miniflare({ modules: true, script: built.outputFiles[0].text, compatibilityDate: '2024-11-01',
+  const mf = new Miniflare(convertV4MiniflareOptions({ modules: true, script: built.outputFiles[0].text, compatibilityDate: '2024-11-01',
     d1Databases: ['DB'], outboundService: mock, bindings: { ENQUIRIES_ENABLED: 'true', TURNSTILE_SITE_KEY: 'test-only',
       TURNSTILE_SECRET_KEY: 'test-only', RATE_LIMIT_SECRET: 'test-only-long-secret', ALLOWED_HOSTS: 'localhost', RETENTION_DAYS: '90' },
-    serviceBindings: { ASSETS: () => new Response('static asset') } });
+    serviceBindings: { ASSETS: () => new Response('static asset') } }));
   const db = await mf.getD1Database('DB');
   const schema = fs.readFileSync(path.join(root, 'migrations/0001_enquiries.sql'), 'utf8').replace(/^--.*$/gm, '').replace(/\s+/g, ' ');
   await db.exec(schema);
