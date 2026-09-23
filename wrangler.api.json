@@ -1,0 +1,48 @@
+{
+  "name": "mooon-enquiries",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "mooonstoreclinic.top/api/*",
+      "zone_id": "20dd455633f59fef6dfbe56f6d23fbc4"
+    },
+    {
+      "pattern": "www.mooonstoreclinic.top/api/*",
+      "zone_id": "20dd455633f59fef6dfbe56f6d23fbc4"
+    }
+  ],
+  "compatibility_date": "2024-11-01",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "observability": {
+    "enabled": true
+  },
+  "main": "worker/index.ts",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mooon-enquiries",
+      "database_id": "df2be91e-7e6d-4928-8565-c3d13d810148",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "ENQUIRIES_ENABLED": "true",
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAFAzR0Z6NNgcMCe9",
+    "ALLOWED_HOSTS": "mooonstoreclinic.top,www.mooonstoreclinic.top",
+    "RETENTION_DAYS": "90"
+  },
+  "triggers": {
+    "crons": [
+      "15 2 * * *"
+    ]
+  },
+  "account_id": "103fd401716c51514727e56df9cf046f"
+}

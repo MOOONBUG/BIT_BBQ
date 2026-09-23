@@ -17,11 +17,12 @@
     "astro": "astro",
     "build": "astro build",
     "check": "astro build && tsc && wrangler deploy --dry-run",
-    "deploy": "astro build && wrangler deploy",
+    "deploy": "astro build && wrangler deploy && wrangler deploy --config wrangler.api.json",
     "dev": "astro dev",
     "preview": "astro build && wrangler dev",
-    "types": "wrangler types --strict-vars=false",
-    "test": "node tests/receiver.cjs"
+    "types": "wrangler types --config wrangler.api.json --strict-vars=false",
+    "test": "node tests/receiver.cjs",
+    "deploy:api": "wrangler deploy --config wrangler.api.json"
   },
   "type": "module"
 }
