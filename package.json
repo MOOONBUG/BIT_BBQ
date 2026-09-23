@@ -24,7 +24,8 @@
     "test": "node tests/receiver.cjs && node tests/micro-review.cjs && node tests/notifications.cjs",
     "deploy:api": "wrangler deploy --config wrangler.api.json",
     "deploy:all": "npm run deploy && npm run deploy:api",
-    "reviews": "node scripts/manage-reviews.mjs"
+    "reviews": "node scripts/manage-reviews.mjs",
+    "inbox": "node scripts/inbox.mjs"
   },
   "type": "module"
 }
