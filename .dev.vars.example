@@ -1,0 +1,6 @@
+# Example placeholders only. Never commit .dev.vars or real credentials.
+TURNSTILE_SECRET_KEY=local-placeholder
+RATE_LIMIT_SECRET=local-placeholder
+ZOHO_CLIENT_ID=local-placeholder
+ZOHO_CLIENT_SECRET=local-placeholder
+ZOHO_REFRESH_TOKEN=local-placeholder

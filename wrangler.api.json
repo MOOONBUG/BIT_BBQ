@@ -37,12 +37,28 @@
     "ENQUIRIES_ENABLED": "true",
     "TURNSTILE_SITE_KEY": "0x4AAAAAAFAzR0Z6NNgcMCe9",
     "ALLOWED_HOSTS": "mooonstoreclinic.top,www.mooonstoreclinic.top",
-    "RETENTION_DAYS": "90"
+    "RETENTION_DAYS": "90",
+    "NOTIFICATIONS_ENABLED": "true",
+    "NOTIFICATIONS_START_AT": "1790178975",
+    "ZOHO_REGION": "com",
+    "ZOHO_ACCOUNT_ID": "8336391000000008002",
+    "NOTIFICATION_FROM": "hello@mooonstoreclinic.top",
+    "NOTIFICATION_TO": "hello@mooonstoreclinic.top"
   },
   "triggers": {
     "crons": [
-      "15 2 * * *"
+      "15 2 * * *",
+      "*/5 * * * *"
     ]
   },
-  "account_id": "103fd401716c51514727e56df9cf046f"
+  "account_id": "103fd401716c51514727e56df9cf046f",
+  "secrets": {
+    "required": [
+      "TURNSTILE_SECRET_KEY",
+      "RATE_LIMIT_SECRET",
+      "ZOHO_CLIENT_ID",
+      "ZOHO_CLIENT_SECRET",
+      "ZOHO_REFRESH_TOKEN"
+    ]
+  }
 }

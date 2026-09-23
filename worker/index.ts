@@ -1,3 +1,4 @@
+import { processNotifications } from './notifications';
 import { microReview } from '../shared/services';
 type Brief = {
   requestKey: string; email: string; pageUrl: string; market: string; goal: string;
@@ -179,6 +180,10 @@ export default {
     }
   },
   async scheduled(_event, env) {
+    if (_event?.cron === '*/5 * * * *') {
+      await processNotifications(env);
+      return;
+    }
     const now = Math.floor(Date.now() / 1000);
     await env.DB.batch([
       env.DB.prepare('DELETE FROM enquiries WHERE expires_at <= ?').bind(now),
